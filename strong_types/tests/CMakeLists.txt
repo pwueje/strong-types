@@ -16,3 +16,6 @@ target_link_libraries(${component}
 )
 
 catch_discover_tests(${component})
+
+target_enable_coverage(${component})
+target_generate_coverage_report(${component})
