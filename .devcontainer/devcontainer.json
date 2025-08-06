@@ -1,0 +1,26 @@
+{
+    // "build": {
+    //     "dockerfile": "Dockerfile"
+    // },
+    "image": "adventofcode:latest",
+    "runArgs": ["--userns=keep-id:uid=1000,gid=1000"],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cmake-tools",
+                "ms-vscode.cpptools",
+                "matepek.vscode-catch2-test-adapter",
+                "cschlosser.doxdocgen"
+            ]
+        }
+    },
+    "remoteUser": "vscode",
+    "containerUser": "vscode",
+    "updateRemoteUserUID": true,
+    "containerEnv": {
+      "HOME": "/home/vscode",
+      "LD_LIBRARY_PATH":"/usr/lib64/:$LD_LIBRARY_PATH"
+    },
+    // "postCreateCommand": "python3 -m venv .venv && source .venv/bin/activate && pip install conan",
+    "postStartCommand": ""
+}
