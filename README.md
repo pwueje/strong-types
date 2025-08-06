@@ -11,10 +11,15 @@ This library provides a simple and efficient way to create strong typedefs (stro
 - Header-only, zero-overhead abstraction
 - Type-safe wrappers for primitive types
 - Prevents accidental mixing of types
-- Supports comparison operators and value access
+- Supports
+    - comparison operators
+    - value access
+    - arithmetic (for arithmetic types)
+    - hashing (usable in unordered containers)
 
 ## Example Usage
 
+### Basic Usage
 ```cpp
 #include <pjexx/strong_types.h>
 using namespace pjexx::strong_types;
@@ -29,6 +34,36 @@ Name n{"Alice"};
 
 // w and l are not interchangeable, even though both wrap int
 // Width w2 = l; // Compilation error
+```
+
+### Arithmetic operations
+```cpp
+#include <pjexx/strong_types.h>
+using namespace pjexx::strong_types;
+// strong_type supports arithmetic for arithmetic types:
+Width w1{3};
+Width w2{7};
+auto w_sum = w1 + w2; // w_sum.get() == 10
+w_sum += w1;           // w_sum.get() == 13
+auto w_prod = w1 * w2; // w_prod.get() == 21
+```
+
+### Hashing support
+```cpp
+// strong_type supports hashing and can be used in unordered containers:
+
+#include <unordered_map>
+#include <unordered_set>
+#include <functional>
+
+std::unordered_map<Width, std::string> width_map;
+width_map[w] = "ten";
+std::unordered_set<Name> name_set;
+name_set.insert(n);
+
+// You can also use std::hash directly:
+std::hash<Width> width_hasher;
+size_t hash_value = width_hasher(w);
 ```
 
 ## Building & Testing
