@@ -143,5 +143,46 @@ TEST_CASE("strong_type hash functionality", "[strong_type][hash]")
     REQUIRE(name_set.contains(n1));
     REQUIRE_FALSE(name_set.contains(n2));
 }
+
+TEST_CASE("strong_type stream operators", "[strong_type][stream]") 
+{
+    Width w {123};
+    Length l {456};
+    Name n {"Charlie"};
+
+    SECTION("Output stream operator") 
+    {
+        std::ostringstream oss;
+        oss << w;
+        REQUIRE(oss.str() == "123");
+
+        std::ostringstream oss2;
+        oss2 << l;
+        REQUIRE(oss2.str() == "456");
+
+        std::ostringstream oss3;
+        oss3 << n;
+        REQUIRE(oss3.str() == "Charlie");
+    }
+
+    SECTION("Input stream operator") 
+    {
+        std::istringstream iss("789");
+        Width w2 {0};
+        iss >> w2;
+        REQUIRE(w2.get() == 789);
+
+        std::istringstream iss2("999");
+        Length l2 {0};
+        iss2 >> l2;
+        REQUIRE(l2.get() == 999);
+
+        std::istringstream iss3("Delta");
+        Name n2 {""};
+        iss3 >> n2;
+        REQUIRE(n2.get() == "Delta");
+    }
+}
+
 // NOLINTEND(readability-identifier-length,readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 }  // namespace pjexx::strong_types::test

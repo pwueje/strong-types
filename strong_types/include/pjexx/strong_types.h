@@ -13,13 +13,13 @@
 
 #include <compare>
 #include <concepts>
+#include <iostream>
 #include <typeindex>
 
 #include "strong_types/concepts.h"
 
 namespace pjexx::strong_types
 {
-
 template <typename T, typename Tag>
 class strong_type
 {
@@ -99,7 +99,6 @@ class strong_type
   private:
     T value_;
 };
-
 }  // namespace pjexx::strong_types
 
 namespace std
@@ -111,4 +110,31 @@ struct hash<pjexx::strong_types::strong_type<T, Tag>>
 };
 }  // namespace std
 
+namespace pjexx::strong_types
+{
+template <typename T>
+concept streamable = requires(std::ostream& stream, const T& value) {
+    { stream << value } -> std::convertible_to<std::ostream&>;
+};
+
+template <typename T>
+concept streamreadable = requires(std::istream& stream, T& value) {
+    { stream >> value } -> std::convertible_to<std::istream&>;
+};
+
+template <streamable T, typename Tag>
+std::ostream& operator<<(std::ostream& stream, const strong_type<T, Tag>& value)
+{
+    return stream << value.get();
+}
+
+template <streamreadable T, typename Tag>
+std::istream& operator>>(std::istream& stream, strong_type<T, Tag>& value)
+{
+    T raw_value;
+    stream >> raw_value;
+    value = strong_type<T, Tag>(raw_value);
+    return stream;
+}
+}  // namespace pjexx::strong_types
 #endif  // PJEXX_STRONG_TYPES_H
