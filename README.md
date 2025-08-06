@@ -16,6 +16,8 @@ This library provides a simple and efficient way to create strong typedefs (stro
     - value access
     - arithmetic (for arithmetic types)
     - hashing (usable in unordered containers)
+    - Stream operators (<<, >>) for types 
+    - std::format (C++20) and {fmt} library (if available)
 
 ## Example Usage
 
@@ -64,6 +66,39 @@ name_set.insert(n);
 // You can also use std::hash directly:
 std::hash<Width> width_hasher;
 size_t hash_value = width_hasher(w);
+```
+
+### Stream operators
+```cpp
+#include <pjexx/strong_types.h>
+#include <iostream>
+using namespace pjexx::strong_types;
+
+Width w{42};
+std::cout << w << std::endl; // prints 42
+
+std::cin >> w; // reads value into w
+```
+
+### std::format and {fmt} support
+```cpp
+#include <pjexx/strong_types.h>
+#include <string>
+#ifdef __cpp_lib_format
+#include <format>
+#endif
+#if __has_include(<fmt/format.h>)
+#include <fmt/format.h>
+#endif
+using namespace pjexx::strong_types;
+
+Width w{123};
+#ifdef __cpp_lib_format
+std::string s1 = std::format("Width: {}", w); // C++20 std::format
+#endif
+#if __has_include(<fmt/format.h>)
+std::string s2 = fmt::format("Width: {}", w); // {fmt} library
+#endif
 ```
 
 ## Building & Testing
