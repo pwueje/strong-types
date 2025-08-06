@@ -1,10 +1,10 @@
 /**
  * @file concepts.h
- * @brief
  *
  * @author Philipp Jeske
  * @date 2025-08-06
  */
+// SPDX-License-Identifier: MIT
 
 #pragma once
 #ifndef PJEXX_STRONG_TYPES_CONCEPTS_H

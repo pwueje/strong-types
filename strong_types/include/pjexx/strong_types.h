@@ -1,10 +1,11 @@
 /**
- * @file strong-types.h
- * @brief
+ * @file strong_types.h
+ * @brief Strong typedef wrapper for type-safe programming.
  *
  * @author Philipp Jeske
  * @date 2025-08-06
  */
+// SPDX-License-Identifier: MIT
 
 #pragma once
 #ifndef PJEXX_STRONG_TYPES_H

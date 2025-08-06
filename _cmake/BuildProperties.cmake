@@ -1,4 +1,4 @@
-# Copyright 2024 Philipp Jeske
+# Copyright 2025 Philipp Jeske
 # SPDX-License-Identifier: MIT
 
 function(target_add_common_build_properties target)

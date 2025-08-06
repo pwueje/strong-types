@@ -1,10 +1,10 @@
 /**
  * @file test_strong_types.cpp
- * @brief
  *
  * @author Philipp Jeske
  * @date 2025-08-06
  */
+// SPDX-License-Identifier: MIT
 
 #include <pjexx/strong_types.h>
 
