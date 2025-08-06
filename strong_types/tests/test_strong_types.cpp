@@ -59,5 +59,20 @@ TEST_CASE("strong_type basic usage", "[strong_type]")
         REQUIRE(m1 >= m1);
         REQUIRE(m1 <= m1);
     }
+
+    SECTION("Casting to and from underlying type")
+    {
+        int raw = static_cast<int>(m1.get());
+        REQUIRE(raw == 5);
+        
+        // The violation is part of the test, therefore ok
+        // NOLINTNEXTLINE(cppcoreguidelines-init-variables,modernize-use-auto)
+        Width w_from_int = static_cast<Width>(raw);
+        REQUIRE(w_from_int == m1);
+
+        // Implicit conversion should not be allowed:
+        static_assert(!std::is_convertible_v<Width, int>, "Width should not be implicitly convertible to int");
+        static_assert(!std::is_convertible_v<int, Width>, "int should not be implicitly convertible to Width");
+    }
 }
 }  // namespace pjexx::strong_types::test

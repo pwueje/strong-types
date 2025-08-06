@@ -6,7 +6,7 @@ add_library(${component} INTERFACE)
 add_library(strong_types::strong_types ALIAS ${component})
 
 add_subdirectory(include/pjexx)
-add_subdirectory(src)
+
 if (BUILD_TESTING)
     add_subdirectory(tests)
 endif()
