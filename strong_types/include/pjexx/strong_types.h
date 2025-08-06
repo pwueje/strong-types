@@ -12,6 +12,7 @@
 
 #include <compare>
 #include <concepts>
+#include <typeindex>
 
 #include "strong_types/concepts.h"
 
@@ -29,7 +30,6 @@ class strong_type
 
     constexpr T get() const { return value_; }
     explicit constexpr operator T() const { return value_; }
-
 
     template <concepts::is_addable U = T>
     constexpr self_type& operator+=(const strong_type<U, Tag>& rhs)
@@ -100,5 +100,14 @@ class strong_type
 };
 
 }  // namespace pjexx::strong_types
+
+namespace std
+{
+template <typename T, typename Tag>
+struct hash<pjexx::strong_types::strong_type<T, Tag>>
+{
+    size_t operator()(const pjexx::strong_types::strong_type<T, Tag>& st) const { return std::hash<T>()(st.get()); }
+};
+}  // namespace std
 
 #endif  // PJEXX_STRONG_TYPES_H

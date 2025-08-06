@@ -11,6 +11,8 @@
 #include <catch2/catch_all.hpp>
 #include <string>
 #include <type_traits>
+#include <unordered_set>
+
 namespace pjexx::strong_types::test
 {
 
@@ -114,4 +116,31 @@ TEST_CASE("strong_type arithmetic operations", "[strong_type][arithmetic]")
         REQUIRE(w_div.get() == 2);
     }
 }
+
+TEST_CASE("strong_type hash functionality", "[strong_type][hash]")
+{
+    Width w1 {42};
+    Width w2 {42};
+    Width w3 {7};
+    Name n1 {"Alice"};
+    Name n2 {"Bob"};
+
+    // Test std::hash for equality
+    std::hash<Width> width_hasher;
+    REQUIRE(width_hasher(w1) == width_hasher(w2));
+    REQUIRE(width_hasher(w1) != width_hasher(w3));
+
+    std::hash<Name> name_hasher;
+    REQUIRE(name_hasher(n1) != name_hasher(n2));
+
+    // Test usage in unordered containers
+    std::unordered_map<Width, std::string> width_map;
+    width_map[w1] = "forty-two";
+    REQUIRE(width_map[w2] == "forty-two");
+
+    std::unordered_set<Name> name_set;
+    name_set.insert(n1);
+    REQUIRE(name_set.count(n1) == 1);
+    REQUIRE(name_set.count(n2) == 0);
 }
+}  // namespace pjexx::strong_types::test
