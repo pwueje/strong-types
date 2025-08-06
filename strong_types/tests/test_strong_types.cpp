@@ -15,7 +15,7 @@
 
 namespace pjexx::strong_types::test
 {
-
+// NOLINTBEGIN(readability-identifier-length,readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 using Width  = strong_type<int, struct WidthTag>;
 using Length = strong_type<int, struct LengthTag>;
 using Name   = strong_type<std::string, struct NameTag>;
@@ -140,7 +140,8 @@ TEST_CASE("strong_type hash functionality", "[strong_type][hash]")
 
     std::unordered_set<Name> name_set;
     name_set.insert(n1);
-    REQUIRE(name_set.count(n1) == 1);
-    REQUIRE(name_set.count(n2) == 0);
+    REQUIRE(name_set.contains(n1));
+    REQUIRE_FALSE(name_set.contains(n2));
 }
+// NOLINTEND(readability-identifier-length,readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 }  // namespace pjexx::strong_types::test

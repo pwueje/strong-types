@@ -4,6 +4,9 @@ add_executable(${component}
     test_strong_types.cpp
 )
 
+target_add_common_build_properties(${component})
+target_enable_clang_tidy(${component})
+
 find_package(Catch2 REQUIRED)
 
 target_link_libraries(${component}
