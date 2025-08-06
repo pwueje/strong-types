@@ -16,6 +16,10 @@
 #include <iostream>
 #include <typeindex>
 
+#ifdef __cpp_lib_format
+#include <format>
+#endif
+
 #include "strong_types/concepts.h"
 
 namespace pjexx::strong_types
@@ -137,4 +141,32 @@ std::istream& operator>>(std::istream& stream, strong_type<T, Tag>& value)
     return stream;
 }
 }  // namespace pjexx::strong_types
+
+#ifdef __cpp_lib_format
+namespace std
+{
+template <typename T, typename Tag>
+struct formatter<pjexx::strong_types::strong_type<T, Tag>> : std::formatter<T>
+{
+    auto format(const pjexx::strong_types::strong_type<T, Tag>& value, std::format_context& ctx) const
+    {
+        return std::formatter<T>::format(value.get(), ctx);
+    }
+};
+}  // namespace std
+#endif
+
+#if __has_include(<fmt/format.h>)
+namespace fmt
+{
+template <typename T, typename Tag>
+struct formatter<pjexx::strong_types::strong_type<T, Tag>> : formatter<T>
+{
+    auto format(const pjexx::strong_types::strong_type<T, Tag>& value, format_context& ctx) const
+    {
+        return formatter<T>::format(value.get(), ctx);
+    }
+};
+}  // namespace fmt
+#endif
 #endif  // PJEXX_STRONG_TYPES_H

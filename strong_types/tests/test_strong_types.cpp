@@ -65,7 +65,7 @@ TEST_CASE("strong_type basic usage", "[strong_type][basic usage]")
     {
         int raw = static_cast<int>(m1.get());
         REQUIRE(raw == 5);
-        
+
         // The violation is part of the test, therefore ok
         // NOLINTNEXTLINE(cppcoreguidelines-init-variables,modernize-use-auto)
         Width w_from_int = static_cast<Width>(raw);
@@ -144,13 +144,13 @@ TEST_CASE("strong_type hash functionality", "[strong_type][hash]")
     REQUIRE_FALSE(name_set.contains(n2));
 }
 
-TEST_CASE("strong_type stream operators", "[strong_type][stream]") 
+TEST_CASE("strong_type stream operators", "[strong_type][stream]")
 {
     Width w {123};
     Length l {456};
     Name n {"Charlie"};
 
-    SECTION("Output stream operator") 
+    SECTION("Output stream operator")
     {
         std::ostringstream oss;
         oss << w;
@@ -165,7 +165,7 @@ TEST_CASE("strong_type stream operators", "[strong_type][stream]")
         REQUIRE(oss3.str() == "Charlie");
     }
 
-    SECTION("Input stream operator") 
+    SECTION("Input stream operator")
     {
         std::istringstream iss("789");
         Width w2 {0};
@@ -184,5 +184,26 @@ TEST_CASE("strong_type stream operators", "[strong_type][stream]")
     }
 }
 
+#if defined(__cpp_lib_format) || __has_include(<fmt/format.h>)
+TEST_CASE("strong_type format support", "[strong_type][format]")
+{
+#ifdef __cpp_lib_format
+    using std::format;
+#else
+    using fmt::format;
+#endif
+
+    Width w {42};
+    Length l {99};
+    Name n {"Eve"};
+
+    SECTION("Format with std::format")
+    {
+        REQUIRE(format("Width: {}", w) == "Width: 42");
+        REQUIRE(format("Length: {}", l) == "Length: 99");
+        REQUIRE(format("Name: {}", n) == "Name: Eve");
+    }
+}
+#endif
 // NOLINTEND(readability-identifier-length,readability-magic-numbers,cppcoreguidelines-avoid-magic-numbers)
 }  // namespace pjexx::strong_types::test
