@@ -11,15 +11,14 @@
 #include <catch2/catch_all.hpp>
 #include <string>
 #include <type_traits>
-
-// Example strong_type implementation for testing
 namespace pjexx::strong_types::test
 {
-using Width = strong_type<int, struct WidthTag>;
-using Length = strong_type<int, struct LengthTag>;
-using Name  = strong_type<std::string, struct NameTag>;
 
-TEST_CASE("strong_type basic usage", "[strong_type]")
+using Width  = strong_type<int, struct WidthTag>;
+using Length = strong_type<int, struct LengthTag>;
+using Name   = strong_type<std::string, struct NameTag>;
+
+TEST_CASE("strong_type basic usage", "[strong_type][basic usage]")
 {
     Width m1 {5};
     Width m2 {10};
@@ -75,4 +74,44 @@ TEST_CASE("strong_type basic usage", "[strong_type]")
         static_assert(!std::is_convertible_v<int, Width>, "int should not be implicitly convertible to Width");
     }
 }
-}  // namespace pjexx::strong_types::test
+
+TEST_CASE("strong_type arithmetic operations", "[strong_type][arithmetic]")
+{
+    Width w1 {3};
+    Width w2 {7};
+    Length l1 {2};
+    Length l2 {5};
+    Name n1 {"Alice"};
+    Name n2 {"Bob"};
+
+    SECTION("Addition and subtraction for arithmetic types")
+    {
+        auto w_sum  = w1 + w2;
+        auto w_diff = w2 - w1;
+        REQUIRE(w_sum.get() == 10);
+        REQUIRE(w_diff.get() == 4);
+
+        auto l_sum  = l1 + l2;
+        auto l_diff = l2 - l1;
+        REQUIRE(l_sum.get() == 7);
+        REQUIRE(l_diff.get() == 3);
+    }
+
+    SECTION("Compound assignment for arithmetic types")
+    {
+        Width w = w1;
+        w += w2;
+        REQUIRE(w.get() == 10);
+        w -= w1;
+        REQUIRE(w.get() == 7);
+    }
+
+    SECTION("Multiplication and division for arithmetic types")
+    {
+        auto w_mul = w1 * w2;
+        auto w_div = w2 / w1;
+        REQUIRE(w_mul.get() == 21);
+        REQUIRE(w_div.get() == 2);
+    }
+}
+}

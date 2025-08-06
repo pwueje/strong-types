@@ -10,6 +10,11 @@
 #ifndef PJEXX_STRONG_TYPES_H
 #define PJEXX_STRONG_TYPES_H
 
+#include <compare>
+#include <concepts>
+
+#include "strong_types/concepts.h"
+
 namespace pjexx::strong_types
 {
 
@@ -25,14 +30,70 @@ class strong_type
     constexpr T get() const { return value_; }
     explicit constexpr operator T() const { return value_; }
 
-    friend constexpr self_type operator+(const self_type& lhs, const self_type& rhs)
+
+    template <concepts::is_addable U = T>
+    constexpr self_type& operator+=(const strong_type<U, Tag>& rhs)
     {
-        return self_type(lhs.value_ + rhs.value_);
+        value_ += rhs.value_;
+        return *this;
     }
 
-    friend constexpr bool operator==(const self_type& lhs, const self_type& rhs) { return lhs.value_ == rhs.value_; }
+    template <concepts::is_subtractable U = T>
+    constexpr self_type& operator-=(const strong_type<U, Tag>& rhs)
+    {
+        value_ -= rhs.value_;
+        return *this;
+    }
 
-    friend constexpr auto operator<=>(const self_type& lhs, const self_type& rhs) { return lhs.value_ <=> rhs.value_; }
+    template <concepts::is_multiplyable U = T>
+    constexpr self_type& operator*=(const strong_type<U, Tag>& rhs)
+    {
+        value_ *= rhs.value_;
+        return *this;
+    }
+
+    template <concepts::is_divideable U = T>
+    constexpr self_type& operator/=(const strong_type<U, Tag>& rhs)
+    {
+        value_ /= rhs.value_;
+        return *this;
+    }
+
+    template <concepts::is_addable U>
+    friend constexpr strong_type<U, Tag> operator+(const strong_type<U, Tag>& lhs, const strong_type<U, Tag>& rhs)
+    {
+        return strong_type<U, Tag>(lhs.value_ + rhs.value_);
+    }
+
+    template <concepts::is_divideable U>
+    friend constexpr strong_type<U, Tag> operator/(const strong_type<U, Tag>& lhs, const strong_type<U, Tag>& rhs)
+    {
+        return strong_type<U, Tag>(lhs.value_ / rhs.value_);
+    }
+
+    template <concepts::is_multiplyable U>
+    friend constexpr strong_type<U, Tag> operator*(const strong_type<U, Tag>& lhs, const strong_type<U, Tag>& rhs)
+    {
+        return strong_type<U, Tag>(lhs.value_ * rhs.value_);
+    }
+
+    template <concepts::is_subtractable U>
+    friend constexpr strong_type<U, Tag> operator-(const strong_type<U, Tag>& lhs, const strong_type<U, Tag>& rhs)
+    {
+        return strong_type<U, Tag>(lhs.value_ - rhs.value_);
+    }
+
+    template <std::equality_comparable U>
+    friend constexpr bool operator==(const strong_type<U, Tag>& lhs, const strong_type<U, Tag>& rhs)
+    {
+        return lhs.value_ == rhs.value_;
+    }
+
+    template <std::three_way_comparable U>
+    friend constexpr auto operator<=>(const strong_type<U, Tag>& lhs, const strong_type<U, Tag>& rhs)
+    {
+        return lhs.value_ <=> rhs.value_;
+    }
 
   private:
     T value_;
